@@ -1,28 +1,28 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ISHAN THAKUR</title>
 
-<!-- Meta Pixel Code (Fixed for Deduplication) -->
+<!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
+t.src=v;s=b.getElementsByTagName(e);
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://facebook.net');
 
-// 1. IS LINE SE META KA AUTOMATIC BUTTON CLICK TRACKING COMPLETE BAND HO JAYEGA
+// AAPKI PIXEL ID SET KAR DIYI HAI - AUTOMATIC DOUBLE COUNTING BLOCK
 fbq('set', 'autoConfig', false, '1498507009003965'); 
-
-fbq('init', '1498507009003965');
+fbq('init', '1498507009003965'); 
 fbq('track', 'PageView');
 </script>
 <noscript>
+<!-- TEESRI JAGAH BHI FIX KAR DIYI HAI -->
 <img height="1" width="1" style="display:none"
 src="https://facebook.com"/>
 </noscript>
@@ -215,7 +215,6 @@ body {
       Request access — approvals are quick ⬇
     </div>
 
-    <!-- Redirection control JS ke paas hai -->
     <a id="joinBtn"
        class="btn-join"
        href="javascript:void(0);">
@@ -230,6 +229,7 @@ body {
     </a>
 
     <div class="footer-credit">
+      <!-- Footer Link -->
       <a href="https://t.me"
          target="_blank"
          rel="noopener noreferrer">
@@ -257,7 +257,7 @@ body {
     }, 1000);
 })();
 
-// JavaScript Control: Strictly 1 Event Per Session/Click
+// ANTI-DOUBLE COUNT REDIRECTION LOGIC
 (function() {
     let isFired = false; 
     const telegramUrl = "https://t.me/+kXzhNQcvBqUxYTg1";
@@ -266,20 +266,21 @@ body {
     joinBtn.addEventListener('click', function(e) {
         e.preventDefault();
 
-        if (!isFired) {
-            isFired = true; // Lock laga diya taaki dubara pixel call na ho
+        // 1. Session check to block fake/multiple clicks
+        if (!sessionStorage.getItem('pixel_lead_fired')) {
+            sessionStorage.setItem('pixel_lead_fired', 'true'); // Permanent lock on this session
 
-            // 2. LEAD EVENT FIRE (Isse automatically logged wale duplicate band ho jayenge)
+            // 2. Clear Standard Lead Event Fire
             if (typeof fbq !== 'undefined') {
                 fbq('track', 'Lead');
             }
 
-            // Safe clean redirection
             setTimeout(function() {
                 window.open(telegramUrl, '_blank', 'noopener,noreferrer');
-            }, 150);
+            }, 100);
+            
         } else {
-            // Agar baar-baar click karega toh sirf redirect hoga, Event Manager me data nahi badhega
+            // Agar user baar baar click karega toh bina double-count kiye sirf telegram link khulega
             window.open(telegramUrl, '_blank', 'noopener,noreferrer');
         }
     });
