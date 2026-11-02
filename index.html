@@ -1,13 +1,11 @@
-﻿
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ISHAN THAKUR</title>
 
-<!-- Meta Pixel Code -->
+<!-- Meta Pixel Code (Fixed for Deduplication) -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -16,13 +14,17 @@ if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1516041060342726');
+'https://facebook.net');
+
+// 1. IS LINE SE META KA AUTOMATIC BUTTON CLICK TRACKING COMPLETE BAND HO JAYEGA
+fbq('set', 'autoConfig', false, '1498507009003965'); 
+
+fbq('init', '1498507009003965');
 fbq('track', 'PageView');
 </script>
 <noscript>
 <img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1516041060342726&ev=PageView&noscript=1"/>
+src="https://facebook.com"/>
 </noscript>
 <!-- End Meta Pixel Code -->
 
@@ -143,6 +145,7 @@ body {
   box-shadow: 0 10px 30px rgba(3,10,40,0.6);
   animation: popup 2s infinite ease-in-out,
              pulseColor 3s infinite alternate;
+  cursor: pointer;
 }
 
 @keyframes popup {
@@ -212,13 +215,12 @@ body {
       Request access — approvals are quick ⬇
     </div>
 
+    <!-- Redirection control JS ke paas hai -->
     <a id="joinBtn"
        class="btn-join"
-       href="https://t.me/+kXzhNQcvBqUxYTg1"
-       target="_blank"
-       rel="noopener noreferrer">
+       href="javascript:void(0);">
       Join Now Telegram Channel
-      <svg xmlns="http://www.w3.org/2000/svg"
+      <svg xmlns="http://w3.org"
            width="22" height="22"
            viewBox="0 0 24 24"
            fill="none">
@@ -228,7 +230,7 @@ body {
     </a>
 
     <div class="footer-credit">
-      <a href="https://t.me/+kXzhNQcvBqUxYTg1"
+      <a href="https://t.me"
          target="_blank"
          rel="noopener noreferrer">
         ADISHAN
@@ -239,6 +241,7 @@ body {
 </div>
 
 <script>
+// Timer Logic
 (function() {
     let n = 8;
     const el = document.getElementById('countNum');
@@ -253,12 +256,34 @@ body {
         }
     }, 1000);
 })();
-</script>
 
-<script>
-document.getElementById('joinBtn').addEventListener('click', function() {
-  fbq('track', 'Subscribe');
-});
+// JavaScript Control: Strictly 1 Event Per Session/Click
+(function() {
+    let isFired = false; 
+    const telegramUrl = "https://t.me/+kXzhNQcvBqUxYTg1";
+    const joinBtn = document.getElementById('joinBtn');
+
+    joinBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        if (!isFired) {
+            isFired = true; // Lock laga diya taaki dubara pixel call na ho
+
+            // 2. LEAD EVENT FIRE (Isse automatically logged wale duplicate band ho jayenge)
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'Lead');
+            }
+
+            // Safe clean redirection
+            setTimeout(function() {
+                window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+            }, 150);
+        } else {
+            // Agar baar-baar click karega toh sirf redirect hoga, Event Manager me data nahi badhega
+            window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+        }
+    });
+})();
 </script>
 
 </body>
